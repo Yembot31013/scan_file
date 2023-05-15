@@ -1,0 +1,223 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body{
+    min-width: 750px;
+}
+
+.progress-header{
+    border: 2px #ccc solid;
+    display: flex;
+    justify-content: space-between;
+    /* padding: 20px; */
+    border-radius: 20px;
+}
+.progress-header .progress-category{
+    border: #ccc dashed 5px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 50px;
+    align-self: center;
+    animation: rotate 0.3s infinite;
+}
+@keyframes rotate {
+    0%{
+        border: #ccc dotted 5px;
+    }
+    100%{
+        border: #ccc dashed 5px;
+    }
+}
+.progress-header .progress-category .progress-text{
+    font-size: 30px;
+    font-weight: bolder;
+}
+.progress-header .progress-category .progress-number{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.progress-header .progress-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.progress-header .progress-group .progress-category-text{
+    font-size: 25px;
+    font-weight: bolder;
+    padding-bottom: 5px;
+}
+.progress-header .progress-group .progress-main{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.progress-header .progress-group .progress-main .progress-value{
+    border: #ccc dashed 5px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    margin: 0px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    animation: rotate 0.3s infinite;
+    /* margin: auto; */
+}
+.progress-header .progress-group .progress-main .progress-value .progress-text{
+    font-size: 13px;
+    font-weight: bolder;
+    padding: 2px;
+}
+.progress-header .progress-group .progress-main .progress-value .progress-number{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.main{
+    border: #ccc solid 2px;
+    min-height: 200px;
+    border-radius: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+    min-width: 750px;
+}
+.main .content{
+    border: #ccc solid 2px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 750px;
+}
+.main .content .content-left{
+    border: #ccc solid 2px;
+    width: 150px;
+    height: 80px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    margin: 0px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main .content .content-left .content-name{
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.main .content .content-right{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    align-items: center;
+}
+.main .content .content-right .content-category{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: #ccc dashed 2px;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px;
+}
+.main .content .content-right .content-category .content-title{
+    font-size: 25px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-category .content-text{
+    font-size: 20px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-method{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: #ccc dashed 2px;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px;
+}
+.main .content .content-right .content-method .content-title{
+    font-size: 25px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-method .content-text{
+    font-size: 20px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-update{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: #ccc dashed 2px;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px;
+}
+.main .content .content-right .content-update .content-title{
+    font-size: 25px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-update .content-text{
+    font-size: 20px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-result{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: #ccc dashed 2px;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px;
+}
+.main .content .content-right .content-result .content-title{
+    font-size: 25px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-result .content-text{
+    font-size: 20px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: #ccc dashed 2px;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px;
+}
+.main .content .content-right .content-footer .content-title{
+    font-size: 25px;
+    font-weight: bolder;
+}
+.main .content .content-right .content-footer .content-text{
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+
+
+

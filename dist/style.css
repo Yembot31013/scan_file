@@ -1,0 +1,125 @@
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #e0eafe
+}
+.preload{
+  position: absolute;
+  /* background-color: rgba(149, 157, 165, 0.7); */
+  backdrop-filter: brightness(0.5);
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-direction: column;
+}
+.preload .loader{
+  width: 200px;
+  height: 200px;
+  border-top: #1683ff solid 5px;
+  border-bottom: #1683ff solid 5px;
+  border-radius: 50%;
+  animation: load 0.2s infinite;
+}
+@keyframes load {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+.preload .loaders{
+  width: 200px;
+  height: 200px;
+  border-left: #1683ff solid 5px;
+  border-right: #1683ff solid 5px;
+  border-radius: 50%;
+  animation: loads 7s infinite;
+}
+@keyframes loads {
+  0%{
+    transform: rotate(360deg);
+  }
+  100%{
+    transform: rotate(0deg);
+  }
+}
+.preload .text-preloader{
+  color: #e0eafc;
+  font-size: 40px;
+  animation: text-load 1s infinite;
+}
+@keyframes text-load {
+  0%{
+    font-size: 30px;
+  }
+  100%{
+    font-size: 40px;
+  }
+}
+.preload.hide{
+  display: none;
+  visibility: hidden;
+}
+
+.container{
+  max-width: 650px;
+  width: 100%;
+  padding: 30px;
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.drag-area{
+  height: 400px;
+  border: 3px dashed #e0eafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 10px auto;
+  border-radius: 20px;
+}
+h1{
+  margin-bottom: 20px;
+}
+.passwd{
+  width: 100%;
+  height: 50px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  border: #34495e solid 2px;
+  padding: 20px;
+  font-size: 24px;
+}
+.drag-area .icon{
+  font-size: 50px;
+  font-weight: 500;
+  color: #1683ff;
+}
+.drag-area .header{
+  font-size: 20px;
+  font-weight: 500;
+  color: #34495e;
+}
+.drag-area .btns{
+  font-size: 20px;
+  font-weight: 500;
+  color: #1683ff;
+  cursor: pointer;
+}
+.cos{
+  border: 4px dashed rgb(68, 166, 101)
+}
+.cus{
+  border: 4px dashed #1683ff;
+}
+.cust{
+  border: 4px dashed #ff4816;
+}
