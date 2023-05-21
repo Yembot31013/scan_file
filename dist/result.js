@@ -70,10 +70,18 @@ function generateResultData(jsonData) {
     result[1].engine_version || '',
     result[1].result || '',
     result[1].method || '',
-    result[1].engine_update || ''
+    formatDate(result[1].engine_update) || '' // Format engine_update as a date with slashes
   ]);
 
   return resultsArray;
+}
+
+// Function to format a date string as "YYYY/MM/DD"
+function formatDate(dateString) {
+  if (dateString.length === 8) {
+    return `${dateString.substring(0, 4)}/${dateString.substring(4, 6)}/${dateString.substring(6)}`;
+  }
+  return dateString; // Return the original value if it doesn't match the expected format
 }
 
 function showResult(data, elem) {
@@ -174,14 +182,12 @@ function getFileStatusDescription(jsonData) {
 function resultFile(link){
     $.ajax({
       type: "GET",
-      url: link,
-      headers: {
-        'x-apikey': '67f88bc1ae450344880102e9ce31ab0dfaef97a7997d1f7e8eac1cbadcf457d2'
+      url: 'https://yembot-api.vercel.app/analyze',
+      data: {
+        link: link
       },
-      // data: "data",
       // dataType: "dataType",
       success: function (response) {
-        try {
           processChart(response)
           processTable(response)
           processResult(response)
@@ -211,7 +217,7 @@ function resultFile(link){
               Swal.fire({
                 title: 'Coffee have finished😞😟',
                 html: 'Buy Me coffee😭!!!',
-                imageUrl: '/img/profile.png',
+                imageUrl: '/dist/profile.png',
                 imageWidth: 400,
                 imageHeight: 200,
                 allowOutsideClick: false,
@@ -228,12 +234,6 @@ function resultFile(link){
               })
             }
           })
-          
-        } catch (error) {
-          text_preloader = document.querySelector("#swal2-title");
-          text_preloader.textContent = "fetching result..."
-          resultFile(link)
-        }
       },
       error: function(err){
         text_preloader = document.querySelector("#swal2-title");
@@ -296,10 +296,10 @@ function processChart(jsonData) {
   };
   
   const fileTypeData = {
-    labels: Object.keys(jsonData.data.attributes.bundle_info.file_types),
+    labels: Object.keys(jsonData.data.attributes.type_tags),
     datasets: [{
       label: 'File Types',
-      data: Object.values(jsonData.data.attributes.bundle_info.file_types),
+      data: Object.values(jsonData.data.attributes.type_tags),
       backgroundColor: [
         'rgb(255, 99, 132)',
         'rgb(54, 162, 235)',
@@ -331,17 +331,32 @@ function processChart(jsonData) {
 }
 
 function processTable(jsonData) {
-  const bundleData = [
-    ["type", jsonData.data.attributes.bundle_info.type],
-    ["number of children", jsonData.data.attributes.bundle_info.num_children],
-    ["uncompressed_size", jsonData.data.attributes.bundle_info.uncompressed_size],
-    ["highest_datetime", jsonData.data.attributes.bundle_info.highest_datetime],
-    ["lowest_datetime", jsonData.data.attributes.bundle_info.lowest_datetime]
-  ]
-  
+  // const bundleData = [
+  //   ["type", jsonData.data.attributes.bundle_info.type],
+  //   ["number of children", jsonData.data.attributes.bundle_info.num_children],
+  //   ["uncompressed_size", jsonData.data.attributes.bundle_info.uncompressed_size],
+  //   ["highest_datetime", jsonData.data.attributes.bundle_info.highest_datetime],
+  //   ["lowest_datetime", jsonData.data.attributes.bundle_info.lowest_datetime]
+  // ]
+
+  const infoKeys = Object.keys(jsonData.data.attributes).filter(key => key.endsWith("_info"));
+  const bundleData = infoKeys.flatMap(infoKey => {
+    const infoObject = jsonData.data.attributes[infoKey];
+    return Object.entries(infoObject);
+  });
+
+  // Convert Unix timestamps with keys ending in "_date" to human-readable dates
+  for (let i = 0; i < bundleData.length; i++) {
+    const [key, value] = bundleData[i];
+    if (typeof value === "number" && key.endsWith("_date")) {
+      bundleData[i][1] = new Date(value * 1000).toLocaleString();
+    }
+  }
+
   const detailData = [
     ["first submission date", jsonData.data.attributes.first_submission_date],
     ["last analysis date", jsonData.data.attributes.last_analysis_date],
+    ["creation date", jsonData.data.attributes.creation_date],
     ["last modification date", jsonData.data.attributes.last_modification_date],
     ["last submission date", jsonData.data.attributes.last_submission_date],
     ["magic", jsonData.data.attributes.magic],
@@ -361,6 +376,14 @@ function processTable(jsonData) {
     ["sha256", jsonData.data.attributes.sha256],
   ]
   
+  // Convert Unix timestamps with keys ending in "_date" to human-readable dates
+  for (let i = 0; i < detailData.length; i++) {
+    const [key, value] = detailData[i];
+    if (typeof value === "number" && key.endsWith("date")) {
+      detailData[i][1] = new Date(value * 1000).toLocaleString();
+    }
+  }
+
   createTableGrid(bundleData, "bundle-info")
   createTableGrid(detailData, "details-info")
 }

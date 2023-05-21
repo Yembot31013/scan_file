@@ -11,19 +11,22 @@ btn.onclick = () => {
   input.click();
 }
 
-function analyzeFile(response) {
-  var link = response["data"]["links"]["self"]
-
+function analyzeFile(link) {
+  var link = link
   $.ajax({
     type: "GET",
-    url: link,
-    headers: {
-      'x-apikey': '67f88bc1ae450344880102e9ce31ab0dfaef97a7997d1f7e8eac1cbadcf457d2'
+    url: 'https://yembot-api.vercel.app/analyze',
+    data: {
+      link: link
     },
-    // data: "data",
     // dataType: "dataType",
     success: function (response) {
       text_preloader.textContent = "analyzing..."
+      if (response.data.attributes.status != "completed"){
+        text_preloader = document.querySelector("#swal2-title");
+        text_preloader.textContent = "fetching result..."
+        analyzeFile(link)
+      }
       var link = response["data"]["links"]["item"]
       localStorage.clear()
       localStorage.setItem("analyze", link)
@@ -41,66 +44,57 @@ function analyzeFile(response) {
   });
 }
 
-function resultFile() {
-  var link = localStorage.getItem("analyze")
-  $.ajax({
-    type: "GET",
-    url: link,
-    headers: {
-      'x-apikey': '67f88bc1ae450344880102e9ce31ab0dfaef97a7997d1f7e8eac1cbadcf457d2'
-    },
-    // data: "data",
-    // dataType: "dataType",
-    success: function (response) {
-      text_preloader.textContent = "checking..."
-      analyzeFile(response)
-    },
-    error: function(err){
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!\n Error code: 31013',
-        footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
-      })
-    }
-    
-  });
-}
-
 //for file less than 32MB,
 function scanSmallFile(folder) {
   let password= passwd.value
   var formData = new FormData();
+  formData.append('file', folder);
   if (password){
     formData.append('password', password);
   }
-  formData.append('file', folder);
+  formData.append('password', "");
 
   $.ajax({
     type: 'POST',
-    url: 'https://www.virustotal.com/api/v3/files',
-    headers: {
-      'x-apikey': '67f88bc1ae450344880102e9ce31ab0dfaef97a7997d1f7e8eac1cbadcf457d2'
-    },
+    url: 'https://yembot-api.vercel.app/scan_file',
+    // headers: {
+    //   'password': password
+    // },
     data: formData,
     processData: false,
     contentType: false,
     success: function(response) {
       text_preloader.textContent = "pending..."
-      analyzeFile(response)
+      var link = response["data"]["links"]["self"]
+      analyzeFile(link)
     },
-    error: function(err) {
-      text_preloader.textContent = "error"
-      dragText.textContent = "Drag & Drop zip file";
-      dragArea.classList.remove("cos")
-      dragArea.classList.remove("cus")
-      dragArea.classList.remove("cust")
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!\n Error code: 31013',
-        footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
-      })
+    error: function(xhr, textStatus, errorThrown) {
+      console.log('small')
+      console.log(xhr)
+      console.log(textStatus)
+      console.log(errorThrown)
+      console.log(xhr.status)
+      if (xhr.status === 413) {
+        // Handle the 413 error here
+        Swal.fire({
+          icon: 'warning',
+          title: 'Oops...',
+          text: 'File too large',
+          footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
+        })
+      } else {
+        text_preloader.textContent = "error"
+        dragText.textContent = "Drag & Drop zip file";
+        dragArea.classList.remove("cos")
+        dragArea.classList.remove("cus")
+        dragArea.classList.remove("cust")
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!\n Error code: 31013',
+          footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
+        })
+      }
     }
   });
 }
@@ -108,42 +102,60 @@ function scanSmallFile(folder) {
 function scanBigFile(folder) {
   let password= passwd.value
   var formData = new FormData();
+  formData.append('file', folder);
   if (password){
     formData.append('password', password);
   }
-  formData.append('file', folder);
+  formData.append('password', "");
 
   $.ajax({
     type: 'POST',
-    url: 'https://www.virustotal.com/api/v3/files/upload_url',
-    headers: {
-      'x-apikey': '67f88bc1ae450344880102e9ce31ab0dfaef97a7997d1f7e8eac1cbadcf457d2'
-    },
+    url: 'https://yembot-api.vercel.app/scan_big_file',
+    // headers: {
+    //   'password': password
+    // },
     data: formData,
     processData: false,
     contentType: false,
     success: function(response) {
       text_preloader.textContent = "pending..."
-      analyzeFile(response)
+      var link = response["data"]["links"]["self"]
+      analyzeFile(link)
     },
-    error: function(err) {
-      text_preloader.textContent = "error"
-      dragText.textContent = "Drag & Drop zip file";
-      dragArea.classList.remove("cos")
-      dragArea.classList.remove("cus")
-      dragArea.classList.remove("cust")
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Something went wrong!\n Error code: 31013',
-        footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
-      })
+    error: function(xhr, textStatus, errorThrown) {
+      console.log('big')
+      console.log(xhr)
+      console.log(textStatus)
+      console.log(errorThrown)
+      console.log(xhr.status)
+      if (xhr.status === 413) {
+        // Handle the 413 error here
+        Swal.fire({
+          icon: 'warning',
+          title: 'Oops...',
+          text: 'File too large',
+          footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
+        })
+      } else {
+        text_preloader.textContent = "error"
+        dragText.textContent = "Drag & Drop zip file";
+        dragArea.classList.remove("cos")
+        dragArea.classList.remove("cus")
+        dragArea.classList.remove("cust")
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!\n Error code: 31013',
+          footer: '<a href="https://codewithyembot.vercel.app">Why do I have this issue? Contact Me!</a>'
+        })
+      }
     }
   });
 }
 function compareFileSize(fileContent) {
-    let mb = fileContent.length / 1000000;
-    mb = parseInt(mb);
+  console.log(fileContent)
+    var megabytes = fileContent.size / (1024 * 1024);
+    mb = parseInt(megabytes);
     text_preloader.textContent = "Scanning...";
     if (mb > 32){
       scanBigFile(fileContent)
