@@ -78,10 +78,13 @@ function generateResultData(jsonData) {
 
 // Function to format a date string as "YYYY/MM/DD"
 function formatDate(dateString) {
-  if (dateString.length === 8) {
-    return `${dateString.substring(0, 4)}/${dateString.substring(4, 6)}/${dateString.substring(6)}`;
+  if (dateString){
+    if (dateString.length === 8) {
+      return `${dateString.substring(0, 4)}/${dateString.substring(4, 6)}/${dateString.substring(6)}`;
+    }
+    return dateString; // Return the original value if it doesn't match the expected format
   }
-  return dateString; // Return the original value if it doesn't match the expected format
+  return ''
 }
 
 function showResult(data, elem) {
